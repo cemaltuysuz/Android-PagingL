@@ -1,5 +1,8 @@
 package com.cemaltuysuz.pagingexample.repo
 
+import android.view.View
+import androidx.appcompat.widget.AppCompatEditText
+import androidx.databinding.BindingAdapter
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.cemaltuysuz.pagingexample.model.User
@@ -11,11 +14,17 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.observers.DisposableSingleObserver
 import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.coroutines.CoroutineContext
 
-class UserRepo @Inject constructor(api:Api) {
+class UserRepo @Inject constructor(api:Api)  {
 
-    private val request = api
+    var request = api
+    private var job: Job? = null
     private val disposable = CompositeDisposable()
 
     // User
@@ -30,7 +39,6 @@ class UserRepo @Inject constructor(api:Api) {
 
 
     fun searchUser(username:String){
-        disposable.add(
             request.findUser(username)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -46,7 +54,5 @@ class UserRepo @Inject constructor(api:Api) {
                     }
 
                 })
-        )
     }
-
 }

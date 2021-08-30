@@ -1,5 +1,9 @@
 package com.cemaltuysuz.pagingexample.utils
 
+import androidx.appcompat.widget.AppCompatImageView
+import androidx.databinding.BindingAdapter
+import com.bumptech.glide.Glide
+
 data class Resource<out T>(val status: Status, val data: T?, val message: String?) {
 
     companion object {
@@ -23,4 +27,14 @@ enum class Status {
     SUCCESS,
     ERROR,
     LOADING
+}
+
+@BindingAdapter("imageUrl")
+fun AppCompatImageView.loadImage(url: String?) {
+    if (!url.isNullOrEmpty()) {
+        Glide.with(this.context)
+            .load(url)
+            .centerCrop()
+            .into(this)
+    }
 }
