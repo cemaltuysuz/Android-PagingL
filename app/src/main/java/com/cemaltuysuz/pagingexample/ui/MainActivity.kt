@@ -21,13 +21,9 @@ import javax.inject.Inject
 * Api Test
 *
 * */
-
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    @Inject
-    lateinit var request: Api
-    val disposable = CompositeDisposable()
     lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,29 +31,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.inpBtn.setOnClickListener{
-            requestApi(binding.inp.text.toString())
-        }
 
-    }
-
-    fun requestApi(username:String){
-        disposable.add(
-            request.findUser(username).
-            subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(object : DisposableSingleObserver<UserItem>(){
-                    override fun onSuccess(t: UserItem?) {
-                        t?.let {
-                            print("Response ->>> $t")
-                            Toast.makeText(applicationContext,t.avatar_url,Toast.LENGTH_SHORT).show()
-                        }
-                    }
-
-                    override fun onError(e: Throwable?) {
-                        Toast.makeText(applicationContext,"err : $e?.message",Toast.LENGTH_LONG).show()
-                    }
-                })
-        )
     }
 }
