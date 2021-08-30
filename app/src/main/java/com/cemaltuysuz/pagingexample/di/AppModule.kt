@@ -1,6 +1,7 @@
 package com.cemaltuysuz.pagingexample.di
 
 import com.cemaltuysuz.pagingexample.Constants
+import com.cemaltuysuz.pagingexample.repo.UserRepo
 import com.cemaltuysuz.pagingexample.service.retrofit.Api
 import com.google.gson.Gson
 import dagger.Module
@@ -30,6 +31,10 @@ object AppModule{
             .build()
             .create(Api::class.java)
     }
+
+    @Singleton
+    @Provides
+    fun injectNormalRepo(api:Api) = UserRepo(api)
 
 
     // OkHttp
