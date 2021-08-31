@@ -12,17 +12,11 @@
     </data>
 
 <androidx.appcompat.widget.LinearLayoutCompat
+    android:id="@+id/searchedUserContainer"
     android:visibility="@{user == null ? View.GONE : View.VISIBLE}"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="15dp">
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:visibility="gone"
-        android:id="@+id/username"
-        android:text="@{user.login}"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
 
     <androidx.cardview.widget.CardView
         android:layout_centerHorizontal="true"
@@ -40,13 +34,24 @@
 
     </androidx.cardview.widget.CardView>
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
    <androidx.appcompat.widget.LinearLayoutCompat
        android:orientation="vertical"
        android:layout_width="match_parent"
        android:layout_height="90dp"
-       android:weightSum="2"
+       android:weightSum="3"
        android:padding="7dp">
+
+       <androidx.appcompat.widget.AppCompatTextView
+           android:id="@+id/searchListRowUserName"
+           android:paddingStart="14dp"
+           android:layout_weight="1"
+           android:layout_width="match_parent"
+           android:text="@{`User name :`+user.login}"
+           android:layout_height="0dip"/>
 
        <androidx.appcompat.widget.AppCompatTextView
            android:id="@+id/searchListRowUserId"
@@ -57,6 +62,8 @@
            android:layout_height="0dip"/>
 
        <androidx.appcompat.widget.AppCompatTextView
+           android:overScrollMode="always"
+           android:autoLink="all"
            android:id="@+id/searchListRowProfileUrl"
            android:paddingStart="14dp"
            android:text="@{`Repo Url :`+user.repos_url}"
@@ -65,6 +72,8 @@
            android:layout_height="0dip"/>
 
    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </ScrollView>
 
 </androidx.appcompat.widget.LinearLayoutCompat>
 

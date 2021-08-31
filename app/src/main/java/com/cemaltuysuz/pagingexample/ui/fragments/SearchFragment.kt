@@ -9,6 +9,8 @@ import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import com.cemaltuysuz.pagingexample.R
 import com.cemaltuysuz.pagingexample.databinding.FragmentSearchBinding
 import com.cemaltuysuz.pagingexample.repo.UserRepo
@@ -34,7 +36,13 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         val binding = FragmentSearchBinding.bind(view)
         fragmentSearchBinding = binding
 
-
+        binding.searchUserInfo.searchedUserContainer.setOnClickListener {
+            val username = binding.searchUserInfo.searchListRowUserName.text.toString()
+           if(username.isNotEmpty()){
+               val action = SearchFragmentDirections.actionSearchFragmentToFollowersFragment(username)
+               Navigation.findNavController(it).navigate(action)
+           }
+        }
 
         // viewModel
         viewModel = ViewModelProvider(requireActivity()).get(UserViewModel::class.java)
