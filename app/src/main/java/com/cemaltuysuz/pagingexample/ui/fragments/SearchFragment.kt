@@ -23,7 +23,6 @@ import javax.inject.Inject
 
 class SearchFragment : Fragment(R.layout.fragment_search) {
 
-
     private lateinit var viewModel:UserViewModel
     private var fragmentSearchBinding : FragmentSearchBinding? = null
 
@@ -34,6 +33,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         // viewBinding
         val binding = FragmentSearchBinding.bind(view)
         fragmentSearchBinding = binding
+
 
 
         // viewModel

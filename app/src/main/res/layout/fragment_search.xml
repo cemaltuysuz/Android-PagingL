@@ -5,8 +5,8 @@
 
     <data>
         <variable
-            name="search"
-            type="com.cemaltuysuz.pagingexample.ui.fragments.SearchFragment" />
+            name="viewModel"
+            type="com.cemaltuysuz.pagingexample.model.UserItem" />
     </data>
 
     <RelativeLayout

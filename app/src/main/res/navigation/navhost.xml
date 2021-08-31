@@ -22,5 +22,9 @@
         <action
             android:id="@+id/action_followersFragment_to_searchFragment"
             app:destination="@id/searchFragment" />
+        <argument
+            android:name="username"
+            app:argType="string"
+            android:defaultValue=" " />
     </fragment>
 </navigation>
