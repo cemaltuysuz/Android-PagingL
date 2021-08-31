@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
+import com.cemaltuysuz.pagingexample.model.User
 import com.cemaltuysuz.pagingexample.model.UserItem
 import com.cemaltuysuz.pagingexample.repo.UserRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,20 +18,26 @@ class UserViewModel @Inject constructor(repo: UserRepo) : ViewModel() {
 
     private val repository = repo
 
+    // -------->  Search Fragment
 
-    val search = MutableLiveData<String>()
-    private val user = MutableLiveData<UserItem>()
-
-    val getUser :LiveData<UserItem>
-    get() = user
-
-    fun setUser(value: UserItem) {
-        user.value = value
-    }
+    private val user = MutableLiveData<UserItem>() // user
+    val getUser :LiveData<UserItem> get() = user // get user
+    fun setUser(value: UserItem) { user.value = value } // Set user
 
     // response LiveData
-    val getResponse = repository.getSearchedUser
+    val getResponse = repository.getSearchedUser // response
 
     // Search user
-    fun searchUser(username: String) = repository.searchUser(username)
+    fun searchUser(username: String) = repository.searchUser(username) // find user
+
+
+    // -------->  Followers Fragment
+
+    private val followers = MutableLiveData<List<UserItem>>()
+    val getFollowers :LiveData<List<UserItem>> get() = followers // get user
+    fun setUser(value: List<UserItem>) { followers.value = value } // Set user
+
+    val responseFollowers = repository.getUserFollowers
+
+    fun findFollowers(username:String) {repository.findFollowers(username)} // find user's followers
 }

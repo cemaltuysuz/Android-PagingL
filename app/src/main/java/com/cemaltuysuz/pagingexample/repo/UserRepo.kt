@@ -24,7 +24,6 @@ import kotlin.coroutines.CoroutineContext
 class UserRepo @Inject constructor(api:Api)  {
 
     var request = api
-    private var job: Job? = null
     private val disposable = CompositeDisposable()
 
     // User
@@ -33,12 +32,13 @@ class UserRepo @Inject constructor(api:Api)  {
     get() = response
 
     // User's followers
-    private val userFollowers = MutableLiveData<User>()
-    val getUserFollowers : LiveData<User>
+    private val userFollowers = MutableLiveData<Resource<List<UserItem>>>()
+    val getUserFollowers : LiveData<Resource<List<UserItem>>>
     get() = userFollowers
 
 
     fun searchUser(username:String){
+        disposable.add(
             request.findUser(username)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -48,11 +48,27 @@ class UserRepo @Inject constructor(api:Api)  {
                             response.value = Resource(Status.SUCCESS,it,null)
                         }
                     }
-
                     override fun onError(e: Throwable?) {
                         response.value = Resource(Status.ERROR,null,e?.message)
                     }
+                }))
+    }
 
-                })
+    fun findFollowers(username:String){
+        disposable.add(
+                request.findUserFollowers(username)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(object : DisposableSingleObserver<List<UserItem>>(){
+                            override fun onSuccess(t: List<UserItem>?) {
+                                t?.let {
+                                    userFollowers.value = Resource(Status.SUCCESS,t,null)
+                                }
+                            }
+                            override fun onError(e: Throwable?) {
+                                userFollowers.value = Resource(Status.ERROR,null,e?.message)
+                            }
+                        })
+        )
     }
 }

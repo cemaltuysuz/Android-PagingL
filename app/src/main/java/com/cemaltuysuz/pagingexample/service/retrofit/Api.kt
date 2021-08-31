@@ -19,8 +19,8 @@ interface Api {
     ) : Single<UserItem>
 
         // user followers
-    @GET("/users/{username}/Followers")
+    @GET("/users/{username}/followers")
         fun findUserFollowers(
         @Path("username") username : String,
-    ) : Single<User>
+    ) : Single<List<UserItem>>
 }

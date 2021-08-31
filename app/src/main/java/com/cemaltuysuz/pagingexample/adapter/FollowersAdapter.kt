@@ -7,14 +7,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.cemaltuysuz.pagingexample.R
 import com.cemaltuysuz.pagingexample.databinding.RowBinding
 import com.cemaltuysuz.pagingexample.model.UserItem
+import javax.inject.Inject
 
 
-class FollowersAdapter() : RecyclerView.Adapter<FollowersAdapter.UserHolder>() {
+class FollowersAdapter @Inject constructor(): RecyclerView.Adapter<FollowersAdapter.UserHolder>() {
 
     private val followersArray = ArrayList<UserItem>()
 
     class UserHolder(bind: RowBinding) : RecyclerView.ViewHolder(bind.root){
-        var data = bind.user
+        var binding = bind
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserHolder {
@@ -24,7 +25,7 @@ class FollowersAdapter() : RecyclerView.Adapter<FollowersAdapter.UserHolder>() {
     }
 
     override fun onBindViewHolder(holder: UserHolder, position: Int) {
-        holder.data = followersArray[position]
+        holder.binding.user = followersArray[position]
     }
 
     override fun getItemCount(): Int {

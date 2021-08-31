@@ -13,7 +13,6 @@
 
 <androidx.appcompat.widget.LinearLayoutCompat
     android:id="@+id/searchedUserContainer"
-    android:visibility="@{user == null ? View.GONE : View.VISIBLE}"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="15dp">
@@ -50,7 +49,7 @@
            android:paddingStart="14dp"
            android:layout_weight="1"
            android:layout_width="match_parent"
-           android:text="@{`User name :`+user.login}"
+           android:text="@{user.login}"
            android:layout_height="0dip"/>
 
        <androidx.appcompat.widget.AppCompatTextView

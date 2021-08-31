@@ -41,6 +41,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
            if(username.isNotEmpty()){
                val action = SearchFragmentDirections.actionSearchFragmentToFollowersFragment(username)
                Navigation.findNavController(it).navigate(action)
+               binding.searchWithUsername.setText("")
            }
         }
 
@@ -79,11 +80,6 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                     else -> Toast.makeText(requireContext(),"Something went wrong",Toast.LENGTH_LONG).show()
                 }
             }
-            viewModel.search.observe(viewLifecycleOwner, Observer {
-                it?.let {
-                    Toast.makeText(requireContext(),it,Toast.LENGTH_SHORT).show()
-                }
-            })
         })
 
         viewModel.getUser.observe(viewLifecycleOwner, Observer {
