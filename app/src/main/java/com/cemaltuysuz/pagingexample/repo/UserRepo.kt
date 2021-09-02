@@ -1,74 +1,64 @@
 package com.cemaltuysuz.pagingexample.repo
 
-import android.view.View
-import androidx.appcompat.widget.AppCompatEditText
-import androidx.databinding.BindingAdapter
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.cemaltuysuz.pagingexample.model.User
 import com.cemaltuysuz.pagingexample.model.UserItem
 import com.cemaltuysuz.pagingexample.service.retrofit.Api
+import com.cemaltuysuz.pagingexample.service.room.UserDao
 import com.cemaltuysuz.pagingexample.utils.Resource
-import com.cemaltuysuz.pagingexample.utils.Status
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.observers.DisposableSingleObserver
-import io.reactivex.rxjava3.schedulers.Schedulers
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import retrofit2.Response
 import javax.inject.Inject
-import kotlin.coroutines.CoroutineContext
 
-class UserRepo @Inject constructor(api:Api)  {
+class UserRepo @Inject constructor(api:Api,dao:UserDao) : UserRepoInterface  {
 
-    var request = api
+    private var request = api
+    private val userDao = dao
     private val disposable = CompositeDisposable()
 
-    // User
-    private val response  = MutableLiveData<Resource<UserItem>>()
-    val getSearchedUser :LiveData<Resource<UserItem>>
-    get() = response
 
-    // User's followers
-    private val userFollowers = MutableLiveData<Resource<List<UserItem>>>()
-    val getUserFollowers : LiveData<Resource<List<UserItem>>>
-    get() = userFollowers
+    override suspend fun findUser(username: String): Resource<UserItem> {
+        return try {
+            val searchUserResponse : Response<UserItem> = request.findUser(username)
 
-
-    fun searchUser(username:String){
-        disposable.add(
-            request.findUser(username)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(object : DisposableSingleObserver<UserItem>(){
-                    override fun onSuccess(t: UserItem?) {
-                        t?.let {
-                            response.value = Resource(Status.SUCCESS,it,null)
-                        }
-                    }
-                    override fun onError(e: Throwable?) {
-                        response.value = Resource(Status.ERROR,null,e?.message)
-                    }
-                }))
+            if (searchUserResponse.isSuccessful){
+                searchUserResponse.body()?.let {
+                    return@let Resource.success(it)
+                } ?: Resource.error("Error",null)
+            }else{
+                Resource.error("No data !",null)
+            }
+        }catch (e:Exception){
+            Resource.error(e.message!!,null)
+        }
     }
 
-    fun findFollowers(username:String){
-        disposable.add(
-                request.findUserFollowers(username)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeWith(object : DisposableSingleObserver<List<UserItem>>(){
-                            override fun onSuccess(t: List<UserItem>?) {
-                                t?.let {
-                                    userFollowers.value = Resource(Status.SUCCESS,t,null)
-                                }
-                            }
-                            override fun onError(e: Throwable?) {
-                                userFollowers.value = Resource(Status.ERROR,null,e?.message)
-                            }
-                        })
-        )
+    override fun findUserFollowers(username: String): Resource<List<UserItem>> {
+        return  try {
+            val findFollowersResponse : Response<List<UserItem>> = request.findUserFollowers(username)
+
+            if (findFollowersResponse.isSuccessful){
+                findFollowersResponse.body()?.let {
+                    return@let Resource.success(it)
+                } ?: Resource.error("Error",null)
+            }else{
+                Resource.error("No data !",null)
+            }
+        }catch (e:Exception){
+            Resource.error(e.message!!,null)
+        }
     }
+
+    override suspend fun resetDatabase() {
+        userDao.resetDatabase()
+    }
+
+    override suspend fun insertAllFollowers(users: List<UserItem>) {
+        userDao.insertAllFollowers(*users.toTypedArray())
+    }
+
+    override suspend fun getFollowers(): List<UserItem> {
+        return userDao.getFollowers()
+    }
+
+
+
 }

@@ -40,24 +40,24 @@ class FollowersFragment @Inject constructor(adapter:FollowersAdapter) : Fragment
 
         viewModel = ViewModelProvider(requireActivity()).get(UserViewModel::class.java) // ViewModel init
 
-        observe() // Observer start
+      //  observe() // Observer start
 
         arguments?.let {
             val username = FollowersFragmentArgs.fromBundle(it).username
-            if (username.isNotEmpty())viewModel.findFollowers(username)
+            // if (username.isNotEmpty())viewModel.findFollowers(username)
         }
     }
-
+    /*
     private fun observe() {
         viewModel.responseFollowers.observe(viewLifecycleOwner, Observer {
             when(it.status){
                 Status.SUCCESS ->{
                     adapter.onDataChange(it.data!! as ArrayList<UserItem>)
-                    Toast.makeText(requireContext(),it.data!!.size.toString(),Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(),it.data.size.toString(),Toast.LENGTH_SHORT).show()
                 }
                 Status.ERROR -> Toast.makeText(requireContext(),it.message,Toast.LENGTH_SHORT).show()
                 else -> Toast.makeText(requireContext(),"Something went wrong !",Toast.LENGTH_SHORT).show()
             }
         })
-    }
+    } */
 }

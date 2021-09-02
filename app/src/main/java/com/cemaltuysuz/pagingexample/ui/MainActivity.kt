@@ -6,7 +6,6 @@ import android.util.Log
 import android.widget.Toast
 import com.cemaltuysuz.pagingexample.R
 import com.cemaltuysuz.pagingexample.databinding.ActivityMainBinding
-import com.cemaltuysuz.pagingexample.model.User
 import com.cemaltuysuz.pagingexample.model.UserItem
 import com.cemaltuysuz.pagingexample.service.retrofit.Api
 import com.cemaltuysuz.pagingexample.ui.fragments.FragmentFactory

@@ -3,11 +3,8 @@ package com.cemaltuysuz.pagingexample.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
-
-// Response class
-class User : ArrayList<UserItem>()
-
 // Data class
+@Entity(tableName = "Users")
 data class UserItem(
     @SerializedName("avatar_url") val avatar_url: String,
     @SerializedName("events_url") val events_url: String,
@@ -16,6 +13,7 @@ data class UserItem(
     @SerializedName("gists_url") val gists_url: String,
     @SerializedName("gravatar_id") val gravatar_id: String,
     @SerializedName("html_url") val html_url: String,
+    @PrimaryKey
     @SerializedName("id") val id: Int,
     @SerializedName("login")  val login: String,
     @SerializedName("node_id") val node_id: String,

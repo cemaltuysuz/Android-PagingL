@@ -1,8 +1,9 @@
 package com.cemaltuysuz.pagingexample.service.retrofit
 
-import com.cemaltuysuz.pagingexample.model.User
+import com.bumptech.glide.load.engine.Resource
 import com.cemaltuysuz.pagingexample.model.UserItem
 import io.reactivex.rxjava3.core.Single
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -14,13 +15,13 @@ interface Api {
 
     // User profile
     @GET("/users/{username}")
-        fun findUser(
+       suspend fun findUser(
         @Path("username") username : String,
-    ) : Single<UserItem>
+    ) : Response<UserItem>
 
         // user followers
     @GET("/users/{username}/followers")
         fun findUserFollowers(
         @Path("username") username : String,
-    ) : Single<List<UserItem>>
+    ) : Response<List<UserItem>>
 }

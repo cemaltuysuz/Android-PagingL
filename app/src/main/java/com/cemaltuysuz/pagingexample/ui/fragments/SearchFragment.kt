@@ -5,6 +5,8 @@ import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Toast
+import androidx.core.content.ContentProviderCompat
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -13,7 +15,9 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.cemaltuysuz.pagingexample.R
 import com.cemaltuysuz.pagingexample.databinding.FragmentSearchBinding
+import com.cemaltuysuz.pagingexample.model.UserItem
 import com.cemaltuysuz.pagingexample.repo.UserRepo
+import com.cemaltuysuz.pagingexample.utils.Resource
 import com.cemaltuysuz.pagingexample.utils.Status
 import com.cemaltuysuz.pagingexample.viewmodel.UserViewModel
 import kotlinx.coroutines.Job
@@ -66,29 +70,23 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                 }
             }
         }
-
         observer()
     }
 
     private fun observer() {
-        viewModel.getResponse.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                progressVisibilityChange(false)
-                when(it.status){
-                    Status.SUCCESS -> viewModel.setUser(it.data!!)
-                    Status.ERROR -> Toast.makeText(requireContext(),it.message,Toast.LENGTH_LONG).show()
-                    else -> Toast.makeText(requireContext(),"Something went wrong",Toast.LENGTH_LONG).show()
+
+        viewModel.getSearchResponse.observe(viewLifecycleOwner, Observer {
+            progressVisibilityChange(false)
+            when(it.status){
+                Status.SUCCESS -> {
+                    val data = it.data!!
+                    fragmentSearchBinding!!.searchUserInfo.user = data
                 }
+                Status.ERROR -> Toast.makeText(requireContext(),it.message,Toast.LENGTH_LONG).show()
+                else -> Toast.makeText(requireContext(),"Something went wrong",Toast.LENGTH_LONG).show()
             }
         })
 
-        viewModel.getUser.observe(viewLifecycleOwner, Observer {
-            try {
-                fragmentSearchBinding!!.searchUserInfo.user = it
-            }catch (e:Exception){
-                Log.d("ERRROR : ",""+e.message)
-            }
-        })
     }
 
     private fun progressVisibilityChange(boolean: Boolean){
@@ -97,3 +95,4 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
     }
 
 }
+

@@ -1,12 +1,18 @@
 package com.cemaltuysuz.pagingexample.di
 
+import android.content.Context
+import androidx.room.Room
 import com.cemaltuysuz.pagingexample.Constants
 import com.cemaltuysuz.pagingexample.repo.UserRepo
+import com.cemaltuysuz.pagingexample.repo.UserRepoInterface
 import com.cemaltuysuz.pagingexample.service.retrofit.Api
+import com.cemaltuysuz.pagingexample.service.room.UserDao
+import com.cemaltuysuz.pagingexample.service.room.UserDatabase
 import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttp
 import okhttp3.OkHttpClient
@@ -20,6 +26,16 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule{
 
+
+    @Singleton
+    @Provides
+    fun injectDatabase(@ApplicationContext context:Context)  =
+        Room.databaseBuilder(context,UserDatabase::class.java,"UserDB").build()
+
+    @Singleton
+    @Provides
+    fun injectDao(database: UserDatabase) = database.userDao()
+
     @Provides
     @Singleton
     fun injectRetrofitApi():Api{
@@ -32,9 +48,13 @@ object AppModule{
             .create(Api::class.java)
     }
 
+
+
     @Singleton
     @Provides
-    fun injectNormalRepo(api:Api) = UserRepo(api)
+    fun injectRepo(api:Api,dao:UserDao) = UserRepo(api,dao) as UserRepoInterface
+
+
 
 
     // OkHttp
