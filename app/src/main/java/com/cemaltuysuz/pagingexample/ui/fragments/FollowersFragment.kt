@@ -6,21 +6,22 @@ import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cemaltuysuz.pagingexample.R
-import com.cemaltuysuz.pagingexample.adapter.FollowersAdapter
+import com.cemaltuysuz.pagingexample.adapter.UserPagingAdapter
 import com.cemaltuysuz.pagingexample.databinding.FragmentFollowersBinding
-import com.cemaltuysuz.pagingexample.model.UserItem
 import com.cemaltuysuz.pagingexample.utils.Status
 import com.cemaltuysuz.pagingexample.viewmodel.UserViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class FollowersFragment @Inject constructor(adapter:FollowersAdapter) : Fragment(R.layout.fragment_followers) {
+class FollowersFragment @Inject constructor(followersAdapter : UserPagingAdapter) : Fragment(R.layout.fragment_followers) {
 
     private lateinit var viewModel : UserViewModel
-    private val adapter = adapter
     private var fragmentFollowersBinding : FragmentFollowersBinding? = null
     private var username:String? = null
+    private val adapter = followersAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -59,9 +60,9 @@ class FollowersFragment @Inject constructor(adapter:FollowersAdapter) : Fragment
         })
 
         viewModel.getFollowers.observe(viewLifecycleOwner, Observer {
-            if (it.isNotEmpty()) adapter.onDataChange(it as ArrayList<UserItem>)
-
-            Toast.makeText(requireContext(),"databaseden geldi ${it.size}",Toast.LENGTH_SHORT).show()
+            viewLifecycleOwner.lifecycleScope.launch {
+                adapter.submitData(it)
+            }
         })
     }
 

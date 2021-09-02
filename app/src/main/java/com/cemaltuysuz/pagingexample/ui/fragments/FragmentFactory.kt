@@ -2,11 +2,11 @@ package com.cemaltuysuz.pagingexample.ui.fragments
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
-import com.cemaltuysuz.pagingexample.adapter.FollowersAdapter
+import com.cemaltuysuz.pagingexample.adapter.UserPagingAdapter
 import javax.inject.Inject
 
 class FragmentFactory @Inject constructor(
-        private val followersAdapter : FollowersAdapter
+        private val followersAdapter : UserPagingAdapter
 ) : FragmentFactory() {
 
     override fun instantiate(classLoader: ClassLoader, className: String): Fragment {

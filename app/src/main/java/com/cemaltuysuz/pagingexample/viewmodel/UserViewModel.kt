@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.*
 import com.cemaltuysuz.pagingexample.model.UserItem
 import com.cemaltuysuz.pagingexample.repo.UserRepo
 import com.cemaltuysuz.pagingexample.utils.Resource
@@ -33,7 +34,13 @@ class UserViewModel @Inject constructor(repo: UserRepo) : ViewModel() {
     private val followersResponse = MutableLiveData<Resource<Status>>()
     val getFollowersResponse :LiveData<Resource<Status>> get() = followersResponse // get user followers
 
-    val getFollowers = repository.getFollowers()
+    //private val followers : DataSource.Factory<Int,UserItem> = repository.getFollowers()
+    val getFollowers = Pager(
+        PagingConfig(
+            pageSize = 10,
+            enablePlaceholders = true))
+            { repository.getFollowers() }.liveData
+
 
     fun findFollowers(username: String)  {
 

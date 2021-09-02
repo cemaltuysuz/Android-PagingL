@@ -1,6 +1,8 @@
 package com.cemaltuysuz.pagingexample.repo
 
 import androidx.lifecycle.LiveData
+import androidx.paging.DataSource
+import androidx.paging.PagingSource
 import com.cemaltuysuz.pagingexample.model.UserItem
 import com.cemaltuysuz.pagingexample.utils.Resource
 import com.cemaltuysuz.pagingexample.utils.Status
@@ -18,5 +20,5 @@ interface UserRepoInterface {
 
     suspend fun resetDatabase()
 
-    fun getFollowers() : LiveData<List<UserItem>>
+    fun getFollowers() : PagingSource<Int, UserItem>
 }

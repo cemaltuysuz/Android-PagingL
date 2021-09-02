@@ -1,6 +1,8 @@
 package com.cemaltuysuz.pagingexample.repo
 
 import androidx.lifecycle.LiveData
+import androidx.paging.DataSource
+import androidx.paging.PagingSource
 import com.cemaltuysuz.pagingexample.model.UserItem
 import com.cemaltuysuz.pagingexample.service.retrofit.Api
 import com.cemaltuysuz.pagingexample.service.room.UserDao
@@ -52,7 +54,7 @@ class UserRepo @Inject constructor(api:Api,dao:UserDao) : UserRepoInterface  {
         userDao.resetDatabase()
     }
 
-    override  fun getFollowers(): LiveData<List<UserItem>> {
+    override  fun getFollowers(): PagingSource<Int,UserItem> {
         return userDao.getFollowers()
     }
 
