@@ -1,7 +1,9 @@
 package com.cemaltuysuz.pagingexample.repo
 
+import androidx.lifecycle.LiveData
 import com.cemaltuysuz.pagingexample.model.UserItem
 import com.cemaltuysuz.pagingexample.utils.Resource
+import com.cemaltuysuz.pagingexample.utils.Status
 
 
 interface UserRepoInterface {
@@ -10,13 +12,11 @@ interface UserRepoInterface {
 
     suspend fun findUser(username : String, ) : Resource<UserItem>
 
-    fun findUserFollowers(username : String, ) : Resource<List<UserItem>>
+    suspend fun findUserFollowers(username : String, ) : Resource<Status>
 
     // DAO Requests
 
     suspend fun resetDatabase()
 
-    suspend fun insertAllFollowers(users : List<UserItem>)
-
-    suspend fun getFollowers() : List<UserItem>
+    fun getFollowers() : LiveData<List<UserItem>>
 }

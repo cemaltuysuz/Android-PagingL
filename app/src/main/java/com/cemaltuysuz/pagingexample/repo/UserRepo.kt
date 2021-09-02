@@ -1,10 +1,11 @@
 package com.cemaltuysuz.pagingexample.repo
 
+import androidx.lifecycle.LiveData
 import com.cemaltuysuz.pagingexample.model.UserItem
 import com.cemaltuysuz.pagingexample.service.retrofit.Api
 import com.cemaltuysuz.pagingexample.service.room.UserDao
 import com.cemaltuysuz.pagingexample.utils.Resource
-import io.reactivex.rxjava3.disposables.CompositeDisposable
+import com.cemaltuysuz.pagingexample.utils.Status
 import retrofit2.Response
 import javax.inject.Inject
 
@@ -12,7 +13,6 @@ class UserRepo @Inject constructor(api:Api,dao:UserDao) : UserRepoInterface  {
 
     private var request = api
     private val userDao = dao
-    private val disposable = CompositeDisposable()
 
 
     override suspend fun findUser(username: String): Resource<UserItem> {
@@ -31,13 +31,14 @@ class UserRepo @Inject constructor(api:Api,dao:UserDao) : UserRepoInterface  {
         }
     }
 
-    override fun findUserFollowers(username: String): Resource<List<UserItem>> {
+    override suspend fun findUserFollowers(username: String): Resource<Status> {
         return  try {
             val findFollowersResponse : Response<List<UserItem>> = request.findUserFollowers(username)
 
             if (findFollowersResponse.isSuccessful){
                 findFollowersResponse.body()?.let {
-                    return@let Resource.success(it)
+                    userDao.insertAllFollowers(*it.toTypedArray())
+                    return@let Resource.success(null)
                 } ?: Resource.error("Error",null)
             }else{
                 Resource.error("No data !",null)
@@ -51,11 +52,7 @@ class UserRepo @Inject constructor(api:Api,dao:UserDao) : UserRepoInterface  {
         userDao.resetDatabase()
     }
 
-    override suspend fun insertAllFollowers(users: List<UserItem>) {
-        userDao.insertAllFollowers(*users.toTypedArray())
-    }
-
-    override suspend fun getFollowers(): List<UserItem> {
+    override  fun getFollowers(): LiveData<List<UserItem>> {
         return userDao.getFollowers()
     }
 

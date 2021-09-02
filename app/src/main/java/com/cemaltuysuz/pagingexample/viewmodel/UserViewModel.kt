@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.cemaltuysuz.pagingexample.model.UserItem
 import com.cemaltuysuz.pagingexample.repo.UserRepo
 import com.cemaltuysuz.pagingexample.utils.Resource
+import com.cemaltuysuz.pagingexample.utils.Status
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -17,25 +18,35 @@ class UserViewModel @Inject constructor(repo: UserRepo) : ViewModel() {
     private val repository = repo
 
     // -------->  Search Fragment
-
     private val searchUserResponse = MutableLiveData<Resource<UserItem>>()
     val getSearchResponse : LiveData<Resource<UserItem>> get() = searchUserResponse
 
-    // Search user
     fun searchUser(username: String)  {
         viewModelScope.launch {
-            val response = repository.findUser(username)
+            val response = repository.findUser(username) // find user
             searchUserResponse.value = response
         }
     }
 
-
     // -------->  Followers Fragment
 
-    private val followers = MutableLiveData<List<UserItem>>()
-    val getFollowers :LiveData<List<UserItem>> get() = followers // get user
-    fun setUser(value: List<UserItem>) { followers.value = value } // Set user
+    private val followersResponse = MutableLiveData<Resource<Status>>()
+    val getFollowersResponse :LiveData<Resource<Status>> get() = followersResponse // get user followers
 
+    val getFollowers = repository.getFollowers()
 
-    //fun findFollowers(username:String) {repository.findFollowers(username)} // find user's followers
+    fun findFollowers(username: String)  {
+
+        viewModelScope.launch {
+            val response = repository.findUserFollowers(username)
+            followersResponse.value = response
+        }
+    }
+
+    fun resetDatabase(){
+        viewModelScope.launch {
+            repository.resetDatabase()
+        }
+    }
+
 }

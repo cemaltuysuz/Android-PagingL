@@ -21,7 +21,7 @@ interface Api {
 
         // user followers
     @GET("/users/{username}/followers")
-        fun findUserFollowers(
+        suspend fun findUserFollowers(
         @Path("username") username : String,
     ) : Response<List<UserItem>>
 }
