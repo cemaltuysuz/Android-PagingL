@@ -42,7 +42,6 @@ object AppModule{
         return Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create())
             .baseUrl(Constants.REMOTE.BASE_URL)
-            .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
             .client(okHttp())
             .build()
             .create(Api::class.java)
