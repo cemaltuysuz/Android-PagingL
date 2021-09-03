@@ -4,6 +4,9 @@ This project was developed to describe the use of the paging library with the ro
 
 What I Did Use ? 
 
+- Data binding
+- View Binding
+- AndroidX
 - Hilt
 - Lifecycle
 - Retrofit2 (Github API)
